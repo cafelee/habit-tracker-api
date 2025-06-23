@@ -111,5 +111,23 @@ namespace HabitTracker.API.Repositories
             return result;
         }
 
+        public async Task<IEnumerable<WeeklyReportDTO>> GetWeeklyReportAsync(int userId, DateTime start, DateTime end)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            var param = new DynamicParameters();
+            param.Add("@UserId", userId);
+            param.Add("@StartDate", start);
+            param.Add("@EndDate", end);
+
+            var result = await conn.QueryAsync<WeeklyReportDTO>(
+                "sp_Report_WeeklySummary",
+                param,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result;
+        }
+
     }
 }
