@@ -26,5 +26,26 @@ namespace HabitTracker.API.Controllers
                 Message = "習慣建立成功"
             });
         }
+
+        [HttpPost("{id}/track")]
+        public async Task<ActionResult<StandardResponse<string>>> TrackHabit(int id, [FromBody] HabitTrackDTO dto)
+        {
+            var success = await _repo.TrackHabitAsync(id, dto);
+            if (!success) return BadRequest(new StandardResponse<string> { Success = false, Message = "打卡失敗" });
+
+            return Ok(new StandardResponse<string> { Message = "打卡成功" });
+        }
+
+        [HttpGet("{id}/tracks")]
+        public async Task<ActionResult<StandardResponse<IEnumerable<HabitTrackRecordDTO>>>> GetTracks(
+    int id, [FromQuery] DateTime start, [FromQuery] DateTime end)
+        {
+            var tracks = await _repo.GetHabitTracksAsync(id, start, end);
+            return Ok(new StandardResponse<IEnumerable<HabitTrackRecordDTO>>
+            {
+                Data = tracks
+            });
+        }
+
     }
 }
