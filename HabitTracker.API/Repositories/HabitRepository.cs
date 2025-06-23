@@ -129,5 +129,23 @@ namespace HabitTracker.API.Repositories
             return result;
         }
 
+        public async Task<IEnumerable<ReminderPriorityDTO>> GetReminderPrioritiesAsync(int userId, DateTime start, DateTime end)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            var param = new DynamicParameters();
+            param.Add("@UserId", userId);
+            param.Add("@StartDate", start);
+            param.Add("@EndDate", end);
+
+            var result = await conn.QueryAsync<ReminderPriorityDTO>(
+                "sp_Habit_ReminderPriority",
+                param,
+                commandType: CommandType.StoredProcedure
+            );
+
+            return result;
+        }
+
     }
 }
