@@ -26,6 +26,40 @@ namespace HabitTracker.API.Controllers
                 Message = "策篋ミΘ"
             });
         }
+        // 眔场策篋
+        [HttpGet]
+        public async Task<ActionResult<StandardResponse<IEnumerable<HabitCreateDTO>>>> GetAllHabits()
+        {
+            var habits = await _repo.GetAllHabitsAsync();
+            return Ok(new StandardResponse<IEnumerable<HabitCreateDTO>> { Data = habits });
+        }
+
+        // 眔虫掸策篋
+        [HttpGet("{id}")]
+        public async Task<ActionResult<StandardResponse<HabitCreateDTO>>> GetHabitById(int id)
+        {
+            var habit = await _repo.GetHabitByIdAsync(id);
+            if (habit == null)
+                return NotFound(new StandardResponse<HabitCreateDTO> { Success = false, Message = "тぃ戈" });
+
+            return Ok(new StandardResponse<HabitCreateDTO> { Data = habit });
+        }
+
+        // 穝策篋
+        [HttpPut("{id}")]
+        public async Task<ActionResult<StandardResponse<string>>> UpdateHabit(int id, [FromBody] HabitUpdateDTO dto)
+        {
+            await _repo.UpdateHabitAsync(id, dto);
+            return Ok(new StandardResponse<string> { Message = "穝Θ" });
+        }
+
+        // 埃策篋
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<StandardResponse<string>>> DeleteHabit(int id)
+        {
+            await _repo.DeleteHabitAsync(id);
+            return Ok(new StandardResponse<string> { Message = "埃Θ" });
+        }
 
         [HttpPost("{id}/track")]
         public async Task<ActionResult<StandardResponse<string>>> TrackHabit(int id, [FromBody] HabitTrackDTO dto)

@@ -33,6 +33,40 @@ namespace HabitTracker.API.Repositories
             return habitId;
         }
 
+        public async Task<IEnumerable<HabitCreateDTO>> GetAllHabitsAsync()
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return await conn.QueryAsync<HabitCreateDTO>("sp_Habit_GetAll", commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<HabitCreateDTO?> GetHabitByIdAsync(int id)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            return await conn.QueryFirstOrDefaultAsync<HabitCreateDTO>(
+                "sp_Habit_GetById",
+                new { HabitId = id },
+                commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<bool> UpdateHabitAsync(int id, HabitUpdateDTO dto)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var json = JsonSerializer.Serialize(dto);
+            var param = new DynamicParameters();
+            param.Add("@HabitId", id);
+            param.Add("@InputJson", json);
+
+            await conn.ExecuteAsync("sp_Habit_Update", param, commandType: CommandType.StoredProcedure);
+            return true;
+        }
+
+        public async Task<bool> DeleteHabitAsync(int id)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            await conn.ExecuteAsync("sp_Habit_Delete", new { HabitId = id }, commandType: CommandType.StoredProcedure);
+            return true;
+        }
+
         // ¥´¥d²ßºD
         public async Task<bool> TrackHabitAsync(int habitId, HabitTrackDTO dto)
         {
