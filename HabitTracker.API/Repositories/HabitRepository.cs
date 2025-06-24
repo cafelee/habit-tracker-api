@@ -167,5 +167,20 @@ namespace HabitTracker.API.Repositories
             return await conn.QueryAsync<HabitTrackDTO>(sql, param);
         }
 
+        // 取得成長趨勢
+        public async Task<IEnumerable<GrowthTrendDTO>> GetGrowthTrendAsync(int userId, DateTime start, DateTime end)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var param = new DynamicParameters();
+            param.Add("@UserId", userId);
+            param.Add("@StartDate", start);
+            param.Add("@EndDate", end);
+
+            return await conn.QueryAsync<GrowthTrendDTO>(
+                "sp_Report_GrowthTrend",
+                param,
+                commandType: CommandType.StoredProcedure);
+        }
+
     }
 }

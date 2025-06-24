@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using HabitTracker.API.DTOs;
 using HabitTracker.API.Repositories;
 using HabitTracker.API.Utils;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace HabitTracker.API.Controllers
 {
@@ -32,5 +35,19 @@ namespace HabitTracker.API.Controllers
             return Ok(new StandardResponse<IEnumerable<WeeklyReportDTO>> { Data = report });
         }
 
+        [HttpGet("growth-trend")]
+        public async Task<ActionResult<StandardResponse<IEnumerable<GrowthTrendDTO>>>> GetGrowthTrend(
+            [FromQuery] int userId,
+            [FromQuery] string start,
+            [FromQuery] string end)
+        {
+            if (!DateTime.TryParse(start, out var startDate) || !DateTime.TryParse(end, out var endDate))
+            {
+                return BadRequest(new StandardResponse<string> { Success = false, Message = "日期格式錯誤" });
+            }
+
+            var trend = await _repo.GetGrowthTrendAsync(userId, startDate, endDate);
+            return Ok(new StandardResponse<IEnumerable<GrowthTrendDTO>> { Data = trend });
+        }
     }
 }
