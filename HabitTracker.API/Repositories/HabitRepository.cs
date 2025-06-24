@@ -147,5 +147,25 @@ namespace HabitTracker.API.Repositories
             return result;
         }
 
+        // HabitRepository
+        public async Task<IEnumerable<HabitTrackDTO>> GetHabitTracksByUserAsync(int userId, DateTime start, DateTime end)
+        {
+            using var conn = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            var param = new DynamicParameters();
+            param.Add("@UserId", userId);
+            param.Add("@StartDate", start);
+            param.Add("@EndDate", end);
+
+            var sql = @"
+                SELECT HT.HABIT_ID, HT.TRACK_DATE, HT.IS_COMPLETED, H.FREQUENCY, H.TITLE
+                FROM HABIT_TRACK HT
+                INNER JOIN HABIT H ON HT.HABIT_ID = H.HABIT_ID
+                WHERE H.USER_ID = @UserId
+                AND HT.TRACK_DATE BETWEEN @StartDate AND @EndDate
+                ORDER BY HT.TRACK_DATE";
+
+            return await conn.QueryAsync<HabitTrackDTO>(sql, param);
+        }
+
     }
 }
