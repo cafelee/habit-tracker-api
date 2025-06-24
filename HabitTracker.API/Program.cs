@@ -1,4 +1,5 @@
 using HabitTracker.API.Repositories;
+using HabitTracker.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services.AddSwaggerGen();
 
 // 加入 Repository DI（HabitRepository）
 builder.Services.AddScoped<HabitRepository>();
+
+// 加入 AuditService DI
+builder.Services.AddScoped<AuditService>();
 
 // CORS 設定（讓別人可跨域呼叫）
 builder.Services.AddCors(options =>

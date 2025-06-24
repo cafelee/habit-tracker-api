@@ -1,7 +1,7 @@
-// ReportController.cs
 using Microsoft.AspNetCore.Mvc;
 using HabitTracker.API.DTOs;
 using HabitTracker.API.Repositories;
+using HabitTracker.API.Services;
 using HabitTracker.API.Utils;
 using System;
 using System.Collections.Generic;
@@ -14,10 +14,12 @@ namespace HabitTracker.API.Controllers
     public class ReportController : ControllerBase
     {
         private readonly HabitRepository _repo;
+        private readonly AuditService _auditService;
 
-        public ReportController(HabitRepository repo)
+        public ReportController(HabitRepository repo, AuditService auditService)
         {
             _repo = repo;
+            _auditService = auditService;
         }
 
         [HttpGet("weekly")]
@@ -32,6 +34,11 @@ namespace HabitTracker.API.Controllers
             }
 
             var report = await _repo.GetWeeklyReportAsync(userId, startDate, endDate);
+
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            await _auditService.LogAsync(userId, "Read", "WeeklyReport", null, ipAddress,
+                $"取得使用者 {userId} 從 {startDate:yyyy-MM-dd} 到 {endDate:yyyy-MM-dd} 的週報");
+
             return Ok(new StandardResponse<IEnumerable<WeeklyReportDTO>> { Data = report });
         }
 
@@ -47,6 +54,11 @@ namespace HabitTracker.API.Controllers
             }
 
             var trend = await _repo.GetGrowthTrendAsync(userId, startDate, endDate);
+
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+            await _auditService.LogAsync(userId, "Read", "GrowthTrend", null, ipAddress,
+                $"取得使用者 {userId} 從 {startDate:yyyy-MM-dd} 到 {endDate:yyyy-MM-dd} 的成長趨勢");
+
             return Ok(new StandardResponse<IEnumerable<GrowthTrendDTO>> { Data = trend });
         }
     }
