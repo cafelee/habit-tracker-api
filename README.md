@@ -65,6 +65,6 @@
 
 ## 聯絡方式
 
-- 作者：你的名字  
-- Email：your.email@example.com  
-- GitHub：https://github.com/你的帳號/habit-tracker-api
+- 作者：cafelee  
+- Email：cafe307187749@gmail.com
+
