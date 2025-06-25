@@ -3,7 +3,7 @@
 ## 專案簡介
 
 - 提供習慣管理、打卡、行為分析與報表功能的後端服務  
-- 技術棧：ASP.NET Core、SQL Server、Dapper、Swagger  
+- 技術棧：ASP.NET Core 8、SQL Server、Dapper、Swagger、Hangfire（背景排程）  
 
 ---
 
@@ -14,6 +14,8 @@
 - **行為風格分析**  
 - **週報與成長趨勢報表**  
 - **提醒優先排序**  
+- **系統日誌 (Audit Trail) 功能**：操作行為紀錄與管理  
+- **Hangfire 背景排程**：自動清理與維護日誌資料  
 
 ---
 
@@ -22,7 +24,8 @@
 - ASP.NET Core 8 Web API  
 - SQL Server 與 Stored Procedure  
 - Dapper 輕量 ORM  
-- Swagger UI  
+- Swagger UI 自動產生 API 文件  
+- Hangfire 用於背景工作排程  
 - 分層架構設計  
 
 ---
@@ -51,6 +54,7 @@
 - `GET /api/reports/weekly`：取得週報  
 - `GET /api/reports/growth-trend`：取得成長趨勢  
 - `GET /api/analysis/style`：行為風格分析  
+- **所有重要操作均有系統日誌紀錄**  
 
 ---
 
@@ -60,6 +64,9 @@
 - 使用者偏好提醒設定  
 - 打卡異常偵測  
 - 社群共習功能  
+- 身份驗證與授權（JWT）  
+- API 版本管理完善  
+- 日誌查詢與管理介面  
 
 ---
 
@@ -67,4 +74,3 @@
 
 - 作者：cafelee  
 - Email：cafe307187749@gmail.com
-
