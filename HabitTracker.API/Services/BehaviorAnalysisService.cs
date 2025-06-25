@@ -8,51 +8,53 @@ public class BehaviorAnalysisService
     public BehaviorStyleDTO AnalyzeBehavior(IEnumerable<HabitTrackDTO> tracks, DateTime startDateParameter, DateTime endDateParameter)
     {
         if (tracks == null || !tracks.Any())
-            return new BehaviorStyleDTO { StyleName = "µL¸ê®Æ", Description = "µL¨¬°÷¸ê®Æ¤ÀªR" };
+            return new BehaviorStyleDTO { StyleName = "ç„¡è³‡æ–™", Description = "ç„¡è¶³å¤ è³‡æ–™åˆ†æ" };
 
         var totalDays = (endDateParameter - startDateParameter).TotalDays + 1;
         var completedCount = tracks.Count(t => t.IsCompleted);
         decimal completionRate = totalDays == 0 ? 0 : (decimal)completedCount / (decimal)totalDays;
 
-        // ¥­§¡¥´¥d®É¶¡¡]¤p®É¡^
+        // å¹³å‡æ‰“å¡æ™‚é–“ï¼ˆå°æ™‚ï¼‰
         var trackHours = tracks.Select(t => t.TrackDate.TimeOfDay.TotalHours);
         double avgHour = trackHours.Average();
 
-        // ¼Ğ·Ç®t
+        // æ¨™æº–å·®
         double stdDev = Math.Sqrt(trackHours.Average(v => Math.Pow(v - avgHour, 2)));
 
-        // ³Ì¤j³sÄò§¹¦¨¤Ñ¼Æ
+        // æœ€å¤§é€£çºŒå®Œæˆå¤©æ•¸
         int maxStreak = CalculateMaxStreak(tracks);
 
-        // ¥­§¡¥´¥d©µ¿ğ¡]¤p®É¡^¡A³o¸Ì°²³]¹w´Á¥´¥d®É¶¡¬O¦­¤W8ÂI
+        // å¹³å‡æ‰“å¡å»¶é²ï¼ˆå°æ™‚ï¼‰ï¼Œé€™è£¡å‡è¨­é æœŸæ‰“å¡æ™‚é–“æ˜¯æ—©ä¸Š8é»
         var delays = tracks.Where(t => t.IsCompleted)
             .Select(t => (t.TrackDate.TimeOfDay.TotalHours - 8.0))
-            .Select(h => h < 0 ? 0 : h);  // ¤£­p¦­©ó8ÂIªº
+            .Select(h => h < 0 ? 0 : h);  // ä¸è¨ˆæ—©æ–¼8é»çš„
         decimal avgDelay = delays.Any() ? (decimal)delays.Average() : 0;
 
-        // Â²³æ¤ÀÃşÅŞ¿è
+        // ç°¡å–®åˆ†é¡é‚è¼¯
         string styleName;
         string description;
 
         if (completionRate > 0.8m && stdDev < 2 && avgDelay < 1)
         {
-            styleName = "³W«ß«¬";
-            description = "§A¦³«ÜÃ­©wªº¥´¥d²ßºD¡A®É¶¡©T©w¡A§¹¦¨²v°ª¡I";
+            styleName = "è¦å¾‹å‹";
+            description = "ä½ æœ‰å¾ˆç©©å®šçš„æ‰“å¡ç¿’æ…£ï¼Œæ™‚é–“å›ºå®šï¼Œå®Œæˆç‡é«˜ï¼";
         }
         else if (completionRate > 0.5m && avgDelay >= 1)
         {
-            styleName = "©ì©µ«¬";
-            description = "§A·|§¹¦¨¥´¥d¡A¦ı®É±`©ì©µ¡A¹Á¸Õ½Õ¾ã®É¶¡§a¡I";
+            styleName = "æ‹–å»¶å‹";
+            description = "ä½ æœƒå®Œæˆæ‰“å¡ï¼Œä½†æ™‚å¸¸æ‹–å»¶ï¼Œå˜—è©¦èª¿æ•´æ™‚é–“å§ï¼";
         }
         else if (completionRate > 0.3m)
         {
-            styleName = "¶¡·²«¬";
-            description = "¥´¥d¸û¤£³W«ß¡A¶¡·²©Ê§¹¦¨¡A«ùÄò§V¤O¡I";
+            styleName = "é–“æ­‡å‹";
+            description = "æ‰“å¡è¼ƒä¸è¦å¾‹ï¼Œé–“æ­‡æ€§å®Œæˆï¼ŒæŒçºŒåŠªåŠ›ï¼";
         }
         else
         {
-            styleName = "¬ğµo«¬";
-            description = "¥´¥d«Ü¤£Ã­©w¡A«ØÄ³³]©w´£¿ôÀ°§U¦Û¤v¡C";
+        int maxStreak = 0, currentStreak = 0;
+        if (ordered.Count == 0)
+            return 0;
+            description = "æ‰“å¡å¾ˆä¸ç©©å®šï¼Œå»ºè­°è¨­å®šæé†’å¹«åŠ©è‡ªå·±ã€‚";
         }
 
         return new BehaviorStyleDTO
