@@ -4,6 +4,7 @@
 
 - 提供習慣管理、打卡、行為分析與報表功能的後端服務  
 - 技術棧：ASP.NET Core 8、SQL Server、Dapper、Swagger、Hangfire（背景排程）  
+- 採用 JWT 身份驗證，保障 API 安全，支援第三方串接  
 
 ---
 
@@ -16,6 +17,8 @@
 - **提醒優先排序**  
 - **系統日誌 (Audit Trail) 功能**：操作行為紀錄與管理  
 - **Hangfire 背景排程**：自動清理與維護日誌資料  
+- **JWT 認證保護**：API 授權安全控制  
+- **Swagger UI 支援帶 Token 測試**  
 
 ---
 
@@ -27,6 +30,7 @@
 - Swagger UI 自動產生 API 文件  
 - Hangfire 用於背景工作排程  
 - 分層架構設計  
+- JWT Bearer Token 身份驗證  
 
 ---
 
@@ -34,6 +38,8 @@
 
 - 啟動專案後，透過 Swagger UI 測試：  
   `https://localhost:{port}/swagger/index.html`  
+- 使用 Swagger UI 頁面右上「Authorize」按鈕帶入 JWT Token  
+- 先呼叫 `/api/auth/login` 取得 Token，再測試受保護 API  
 
 ---
 
@@ -41,7 +47,7 @@
 
 1. 安裝 .NET 8 SDK  
 2. 安裝並設定 SQL Server  
-3. 設定 `appsettings.json` 連線字串  
+3. 設定 `appsettings.json` 連線字串及 JWT 設定  
 4. 啟動 API 專案  
 5. 使用 Swagger 或 Postman 測試 API  
 
@@ -49,11 +55,12 @@
 
 ## 重要 API 範例
 
-- `POST /api/habit`：建立習慣  
-- `POST /api/habit/{id}/track`：打卡習慣  
-- `GET /api/reports/weekly`：取得週報  
-- `GET /api/reports/growth-trend`：取得成長趨勢  
-- `GET /api/analysis/style`：行為風格分析  
+- `POST /api/auth/login`：使用者登入取得 JWT Token  
+- `POST /api/habit`：建立習慣（需帶 Token）  
+- `POST /api/habit/{id}/track`：打卡習慣（需帶 Token）  
+- `GET /api/reports/weekly`：取得週報（需帶 Token）  
+- `GET /api/reports/growth-trend`：取得成長趨勢（需帶 Token）  
+- `GET /api/analysis/style`：行為風格分析（需帶 Token）  
 - **所有重要操作均有系統日誌紀錄**  
 
 ---
@@ -64,7 +71,6 @@
 - 使用者偏好提醒設定  
 - 打卡異常偵測  
 - 社群共習功能  
-- 身份驗證與授權（JWT）  
 - API 版本管理完善  
 - 日誌查詢與管理介面  
 
