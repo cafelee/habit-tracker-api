@@ -34,6 +34,23 @@
 
 ---
 
+### 資料流程圖
+
+使用者
+↓
+API (接收請求)
+↓
+JWT 認證（授權檢查）
+↓
+Controller（處理邏輯入口）
+↓
+Service / Repository（業務邏輯與資料存取）
+↓
+資料庫 (SQL Server)
+↓
+回傳結果給使用者
+---
+
 ## API 文件與測試
 
 - 啟動專案後，透過 Swagger UI 測試：  
