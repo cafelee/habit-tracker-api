@@ -2,6 +2,7 @@ using HabitTracker.API.DTOs;
 using HabitTracker.API.Repositories;
 using HabitTracker.API.Services;
 using HabitTracker.API.Utils;
+using Microsoft.AspNetCore.Authorization; // Auth protection
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace HabitTracker.API.Controllers
 {
     [ApiController]
     [Route("api/analysis")]
+    [Authorize]
     public class AnalysisController : ControllerBase
     {
         private readonly HabitRepository _repo;

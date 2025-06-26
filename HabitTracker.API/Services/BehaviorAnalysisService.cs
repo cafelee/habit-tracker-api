@@ -76,7 +76,7 @@ public class BehaviorAnalysisService
             .OrderBy(d => d)
             .ToList();
 
-        int maxStreak = 0, currentStreak = 1;
+        int maxStreak = 0, currentStreak = 0;
 
         for (int i = 1; i < ordered.Count; i++)
         {
