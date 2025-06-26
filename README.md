@@ -40,10 +40,10 @@
 graph TD
   User[使用者]
   API[API 接收請求]
-  JWT[JWT 認證（授權檢查）]
-  Controller[Controller（邏輯入口）]
-  Service[Service / Repository（業務邏輯與資料存取）]
-  DB[資料庫 (SQL Server)]
+  JWT[JWT 認證 (授權檢查)]
+  Controller[Controller 邏輯入口]
+  Service[Service / Repository 業務邏輯與資料存取]
+  DB[資料庫 SQL Server]
   Response[回傳結果給使用者]
 
   User --> API
@@ -54,6 +54,7 @@ graph TD
   DB --> Service
   Service --> Controller
   Controller --> Response
+
 ```
 ---
 
